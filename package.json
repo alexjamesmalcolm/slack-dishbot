@@ -6,7 +6,7 @@
   "scripts": {
     "start": "ts-node index.ts",
     "dev": "ts-node-dev index.ts",
-    "dev:debug": "dotenv -e .env \"ts-node-dev --inspect --respawn index.ts\""
+    "dev:debug": "ts-node-dev --inspect --respawn index.ts"
   },
   "repository": {
     "type": "git",
@@ -19,8 +19,6 @@
   },
   "homepage": "https://github.com/alexjamesmalcolm/slack-dishbot#readme",
   "devDependencies": {
-    "cross-env": "^7.0.3",
-    "dotenv-cli": "^4.0.0",
     "localtunnel": "^2.0.1",
     "ts-node-dev": "^1.1.6",
     "tslint": "^5.12.1"
