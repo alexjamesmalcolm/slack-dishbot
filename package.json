@@ -6,8 +6,7 @@
   "scripts": {
     "start": "ts-node index.ts",
     "dev": "ts-node-dev index.ts",
-    "dev:debug": "dotenv -e .env \"ts-node-dev --inspect --respawn index.ts\"",
-    "localtunnel": "npx localtunnel --host http://loca.lt --port 8000 --subdomain slack-dishbot"
+    "dev:debug": "dotenv -e .env \"ts-node-dev --inspect --respawn index.ts\""
   },
   "repository": {
     "type": "git",

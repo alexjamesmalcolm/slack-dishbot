@@ -1,1 +1,1 @@
-while true; do npm run localtunnel; sleep 2; done
+while true; do npx localtunnel --host http://loca.lt --port 8000 --subdomain slack-dishbot; sleep 2; done
