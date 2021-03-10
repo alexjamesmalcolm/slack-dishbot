@@ -1,7 +1,6 @@
 import SlashMessage from "./slash-message";
 
 interface Dishwheel {
-  id: string;
   channel_id: SlashMessage["channel_id"];
   dishwashers: string[];
   dateCurrentDishwasherStarted: string;
