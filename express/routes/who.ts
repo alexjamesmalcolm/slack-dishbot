@@ -26,12 +26,14 @@ export const who: RequestHandler = async (req, res) => {
     const isItPossibleForThereToBeAFine =
       dishwheel.fineAmount > 0 && dishwheel.secondsUntilFine > 0;
     const countOfFinePeriodsPassed =
-      1 +
-      (millisecondsOnDishes - dishwheel.secondsUntilFine * 1000) /
-        (dishwheel.finePeriodicity * 1000);
-    if (countOfFinePeriodsPassed >= 1) {
+      dishwheel.finePeriodicity > 0
+        ? 1 +
+          (millisecondsOnDishes - dishwheel.secondsUntilFine * 1000) /
+            (dishwheel.finePeriodicity * 1000)
+        : millisecondsOnDishes / (dishwheel.secondsUntilFine * 1000);
+    if (isItPossibleForThereToBeAFine && countOfFinePeriodsPassed >= 1) {
       respondWithMessage(
-        `${dishwheel.currentDishwasher} turn on dishes started ${duration(
+        `${dishwheel.currentDishwasher}'s turn on dishes started ${duration(
           -1 * millisecondsOnDishes
         ).humanize(true)} and has so far accrued a fine of $${
           Math.floor(countOfFinePeriodsPassed) * dishwheel.fineAmount
@@ -41,7 +43,7 @@ export const who: RequestHandler = async (req, res) => {
       );
     } else if (isItPossibleForThereToBeAFine) {
       respondWithMessage(
-        `${dishwheel.currentDishwasher} turn on dishes started ${duration(
+        `${dishwheel.currentDishwasher}'s turn on dishes started ${duration(
           -1 * millisecondsOnDishes
         ).humanize(true)} and ${duration(millisecondsTillFine).humanize(
           true
@@ -49,7 +51,7 @@ export const who: RequestHandler = async (req, res) => {
       );
     } else {
       respondWithMessage(
-        `${dishwheel.currentDishwasher} turn on dishes started ${duration(
+        `${dishwheel.currentDishwasher}'s  turn on dishes started ${duration(
           -1 * millisecondsOnDishes
         ).humanize(true)}`
       );
