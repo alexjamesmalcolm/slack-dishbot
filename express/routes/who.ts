@@ -51,7 +51,7 @@ export const who: RequestHandler = async (req, res) => {
       );
     } else {
       respondWithMessage(
-        `${dishwheel.currentDishwasher}'s  turn on dishes started ${duration(
+        `${dishwheel.currentDishwasher}'s turn on dishes started ${duration(
           -1 * millisecondsOnDishes
         ).humanize(true)}`
       );
