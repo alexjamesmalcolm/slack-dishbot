@@ -25,22 +25,33 @@ export const who: RequestHandler = async (req, res) => {
       dishwheel.secondsUntilFine * 1000 - millisecondsOnDishes;
     const isItPossibleForThereToBeAFine =
       dishwheel.fineAmount > 0 && dishwheel.secondsUntilFine > 0;
-    const isThereAlreadyAFine = false;
-    if (isThereAlreadyAFine) {
-      // TODO
+    const countOfFinePeriodsPassed =
+      1 +
+      (millisecondsOnDishes - dishwheel.secondsUntilFine * 1000) /
+        (dishwheel.finePeriodicity * 1000);
+    if (countOfFinePeriodsPassed >= 1) {
+      respondWithMessage(
+        `${dishwheel.currentDishwasher} turn on dishes started ${duration(
+          -1 * millisecondsOnDishes
+        ).humanize(true)} and has so far accrued a fine of $${
+          Math.floor(countOfFinePeriodsPassed) * dishwheel.fineAmount
+        } and will accrue $${dishwheel.fineAmount} more ${duration(
+          (countOfFinePeriodsPassed % 1) * dishwheel.fineAmount
+        ).humanize(true)}`
+      );
     } else if (isItPossibleForThereToBeAFine) {
       respondWithMessage(
-        `${dishwheel.currentDishwasher} has been on dishes ${duration(
+        `${dishwheel.currentDishwasher} turn on dishes started ${duration(
           -1 * millisecondsOnDishes
-        ).humanize(true)} and ${duration(millisecondsOnDishes).humanize(
+        ).humanize(true)} and ${duration(millisecondsTillFine).humanize(
           true
         )} will receive a fine of ${dishwheel.fineAmount}`
       );
     } else {
       respondWithMessage(
-        `${dishwheel.currentDishwasher} has been on dishes for ${duration(
-          millisecondsOnDishes
-        ).humanize()}`
+        `${dishwheel.currentDishwasher} turn on dishes started ${duration(
+          -1 * millisecondsOnDishes
+        ).humanize(true)}`
       );
     }
   }
