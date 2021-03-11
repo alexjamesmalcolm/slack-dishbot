@@ -1,6 +1,9 @@
 import { RequestHandler } from "express";
 import { connect } from "../../mongodb";
-import Dishwheel from "../../types/dishwheel";
+import Dishwheel, {
+  getDishwasherAfter,
+  getDishwasherBefore,
+} from "../../types/dishwheel";
 import SlashMessage from "../../types/slash-message";
 import { respond } from "../respond";
 
@@ -23,16 +26,22 @@ export const join: RequestHandler = async (req, res) => {
     if (dishwheel.dishwashers.includes(person)) {
       respondWithMessage("You are already on the dishwheel.");
     } else {
+      const alteredDishwheel = {
+        ...dishwheel,
+        dishwashers: dishwheel.dishwashers.concat([person]),
+      };
       await collectionOfDishwheels.updateOne(
         { channel_id },
         {
-          $set: {
-            ...dishwheel,
-            dishwashers: dishwheel.dishwashers.concat([person]),
-          },
+          $set: alteredDishwheel,
         }
       );
-      respondWithMessage(`Added ${person} to dishwheel.`);
+      respondWithMessage(
+        `${person} joined the dishwheel and is after ${getDishwasherBefore(
+          alteredDishwheel,
+          person
+        )} and before ${getDishwasherAfter(alteredDishwheel, person)}`
+      );
     }
   } else {
     await collectionOfDishwheels.insertOne({
@@ -45,7 +54,7 @@ export const join: RequestHandler = async (req, res) => {
       finePeriodicity: 0,
       secondsUntilFine: 0,
     });
-    respondWithMessage(`Created dishwheel and added ${person}`);
+    respondWithMessage(`${person} started a dishwheel!`);
   }
   close();
 };
