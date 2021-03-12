@@ -2,7 +2,6 @@ import { RequestHandler } from "express";
 import { connect } from "../../mongodb";
 import Dishwheel from "../../types/dishwheel";
 import SlashMessage from "../../types/slash-message";
-import { duration } from "moment";
 
 export const repeatingFineDuration: RequestHandler = async (req, res) => {
   const {
@@ -21,7 +20,9 @@ export const repeatingFineDuration: RequestHandler = async (req, res) => {
   if (!dishwheel) {
     res.send(`No dishwheel in channel ${channel_name}.`);
   } else if (text.trim() === "") {
-    res.send(`The repeating fine duration is ${dishwheel.finePeriodicity}.`);
+    res.send(
+      `The repeating fine duration is ${dishwheel.finePeriodicity} seconds.`
+    );
   } else if (user_id !== dishwheel.creatorId) {
     res.send(
       `${user_name} cannot change the dishwheel's repeating fine duration, only the creator of the dishwheel can.`
@@ -40,9 +41,7 @@ export const repeatingFineDuration: RequestHandler = async (req, res) => {
         }
       );
       res.send(
-        `Updated repeating fine duration to ${duration(
-          dishwheel.finePeriodicity
-        ).humanize()}.`
+        `Updated repeating fine duration to ${dishwheel.finePeriodicity} seconds.`
       );
     } else {
       res.send(`Could not set "${text}" as the repeating fine duration.`);
