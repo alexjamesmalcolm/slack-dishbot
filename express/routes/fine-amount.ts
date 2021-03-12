@@ -27,7 +27,7 @@ export const fineAmount: RequestHandler = async (req, res) => {
     );
   } else {
     const fineAmount = Number.parseFloat(text.trim());
-    if (!Number.isNaN(fineAmount) && fineAmount > 0) {
+    if (!Number.isNaN(fineAmount) && fineAmount >= 0) {
       const alteredDishwheel: Dishwheel = {
         ...dishwheel,
         fineAmount,
