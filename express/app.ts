@@ -12,6 +12,9 @@ export const runApp = async () => {
 
   app.use(urlencoded({ extended: false }));
   app.use(json());
+  app.get("*", (req, res) => {
+    res.send("Health Check: UP");
+  });
   app.post("/done", done);
   app.post("/join", join);
   app.post("/who", who);
