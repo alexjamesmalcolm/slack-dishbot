@@ -3,9 +3,13 @@ import { connect } from "../../mongodb";
 import Dishwheel from "../../types/dishwheel";
 import SlashMessage from "../../types/slash-message";
 import { duration } from "moment";
+import { noDishwheelFoundResponse } from "./responses/no-dishwheel-found";
+import { respond } from "../respond";
 
 export const who: RequestHandler = async (req, res) => {
-  const { channel_id, channel_name } = req.body as SlashMessage;
+  const message = req.body as SlashMessage;
+  const { channel_id, response_url } = message;
+  res.send();
   const [mongo, close] = await connect();
   const collectionOfDishwheels = mongo.collection<Dishwheel>("dishwheels");
   const dishwheel = await collectionOfDishwheels.findOne(
@@ -13,7 +17,7 @@ export const who: RequestHandler = async (req, res) => {
     { timeout: true }
   );
   if (!dishwheel) {
-    res.send(`No dishwheel in channel ${channel_name}.`);
+    noDishwheelFoundResponse(message);
   } else {
     const millisecondsOnDishes =
       new Date().getTime() -
@@ -29,28 +33,34 @@ export const who: RequestHandler = async (req, res) => {
             (dishwheel.finePeriodicity * 1000)
         : millisecondsOnDishes / (dishwheel.secondsUntilFine * 1000);
     if (isItPossibleForThereToBeAFine && countOfFinePeriodsPassed >= 1) {
-      res.send(
+      respond(
+        response_url,
         `${dishwheel.currentDishwasher}'s turn on dishes started ${duration(
           -1 * millisecondsOnDishes
         ).humanize(true)} and has so far accrued a fine of $${
           Math.floor(countOfFinePeriodsPassed) * dishwheel.fineAmount
         } and will accrue $${dishwheel.fineAmount} more ${duration(
           (countOfFinePeriodsPassed % 1) * dishwheel.fineAmount
-        ).humanize(true)}`
+        ).humanize(true)}`,
+        true
       );
     } else if (isItPossibleForThereToBeAFine) {
-      res.send(
+      respond(
+        response_url,
         `${dishwheel.currentDishwasher}'s turn on dishes started ${duration(
           -1 * millisecondsOnDishes
         ).humanize(true)} and ${duration(millisecondsTillFine).humanize(
           true
-        )} will receive a fine of ${dishwheel.fineAmount}`
+        )} will receive a fine of ${dishwheel.fineAmount}`,
+        true
       );
     } else {
-      res.send(
+      respond(
+        response_url,
         `${dishwheel.currentDishwasher}'s turn on dishes started ${duration(
           -1 * millisecondsOnDishes
-        ).humanize(true)}`
+        ).humanize(true)}`,
+        true
       );
     }
   }

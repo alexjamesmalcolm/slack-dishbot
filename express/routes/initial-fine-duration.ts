@@ -2,15 +2,13 @@ import { RequestHandler } from "express";
 import { connect } from "../../mongodb";
 import Dishwheel from "../../types/dishwheel";
 import SlashMessage from "../../types/slash-message";
+import { respond } from "../respond";
+import { noDishwheelFoundResponse } from "./responses/no-dishwheel-found";
 
 export const initialFineDuration: RequestHandler = async (req, res) => {
-  const {
-    channel_id,
-    channel_name,
-    text,
-    user_id,
-    user_name,
-  } = req.body as SlashMessage;
+  const message = req.body as SlashMessage;
+  const { channel_id, text, user_id, user_name, response_url } = message;
+  res.send();
   const [mongo, close] = await connect();
   const collectionOfDishwheels = mongo.collection<Dishwheel>("dishwheels");
   const dishwheel = await collectionOfDishwheels.findOne(
@@ -18,14 +16,16 @@ export const initialFineDuration: RequestHandler = async (req, res) => {
     { timeout: true }
   );
   if (!dishwheel) {
-    res.send(`No dishwheel in channel ${channel_name}.`);
+    noDishwheelFoundResponse(message);
   } else if (text.trim() === "") {
-    res.send(
+    respond(
+      response_url,
       `The initial fine duration in seconds is ${dishwheel.secondsUntilFine}.`
     );
   } else if (user_id !== dishwheel.creatorId) {
-    res.send(
-      `${user_name} cannot change the dishwheel's inital fine duration, only the creator of the dishwheel can.`
+    respond(
+      response_url,
+      `${user_name} cannot change the dishwheel's initial fine duration, only the creator of the dishwheel can.`
     );
   } else {
     const secondsUntilFine = Number.parseFloat(text.trim());
@@ -40,12 +40,15 @@ export const initialFineDuration: RequestHandler = async (req, res) => {
           $set: alteredDishwheel,
         }
       );
-      res.send(
-        `Updated inital fine duration to ${dishwheel.secondsUntilFine} seconds.`
+      respond(
+        response_url,
+        `Updated initial fine duration to ${dishwheel.secondsUntilFine} seconds.`,
+        true
       );
     } else {
-      res.send(
-        `Could not set "${text}" as the inital fine duration in seconds.`
+      respond(
+        response_url,
+        `Could not set "${text}" as the initial fine duration in seconds.`
       );
     }
   }

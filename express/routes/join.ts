@@ -16,7 +16,6 @@ export const join: RequestHandler = async (req, res) => {
     user_id,
     user_name: person,
   } = req.body as SlashMessage;
-  const respondWithMessage = respond(responseUrl);
   const collectionOfDishwheels = mongo.collection<Dishwheel>("dishwheels");
   const dishwheel = await collectionOfDishwheels.findOne(
     { channel_id },
@@ -24,7 +23,7 @@ export const join: RequestHandler = async (req, res) => {
   );
   if (dishwheel) {
     if (dishwheel.dishwashers.includes(person)) {
-      respondWithMessage("You are already on the dishwheel.");
+      respond(responseUrl, "You are already on the dishwheel.");
     } else {
       const alteredDishwheel = {
         ...dishwheel,
@@ -36,11 +35,13 @@ export const join: RequestHandler = async (req, res) => {
           $set: alteredDishwheel,
         }
       );
-      respondWithMessage(
+      respond(
+        responseUrl,
         `${person} joined the dishwheel and is after ${getDishwasherBefore(
           alteredDishwheel,
           person
-        )} and before ${getDishwasherAfter(alteredDishwheel, person)}`
+        )} and before ${getDishwasherAfter(alteredDishwheel, person)}`,
+        true
       );
     }
   } else {
@@ -54,7 +55,7 @@ export const join: RequestHandler = async (req, res) => {
       finePeriodicity: 0,
       secondsUntilFine: 0,
     });
-    respondWithMessage(`${person} started a dishwheel!`);
+    respond(responseUrl, `${person} started a dishwheel!`, true);
   }
   close();
 };

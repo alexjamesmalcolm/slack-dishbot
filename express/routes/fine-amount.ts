@@ -2,15 +2,13 @@ import { RequestHandler } from "express";
 import { connect } from "../../mongodb";
 import Dishwheel from "../../types/dishwheel";
 import SlashMessage from "../../types/slash-message";
+import { respond } from "../respond";
+import { noDishwheelFoundResponse } from "./responses/no-dishwheel-found";
 
 export const fineAmount: RequestHandler = async (req, res) => {
-  const {
-    channel_id,
-    channel_name,
-    text,
-    user_id,
-    user_name,
-  } = req.body as SlashMessage;
+  const message = req.body as SlashMessage;
+  const { channel_id, text, user_id, user_name, response_url } = message;
+  res.send();
   const [mongo, close] = await connect();
   const collectionOfDishwheels = mongo.collection<Dishwheel>("dishwheels");
   const dishwheel = await collectionOfDishwheels.findOne(
@@ -18,11 +16,12 @@ export const fineAmount: RequestHandler = async (req, res) => {
     { timeout: true }
   );
   if (!dishwheel) {
-    res.send(`No dishwheel in channel ${channel_name}.`);
+    noDishwheelFoundResponse(message);
   } else if (text.trim() === "") {
-    res.send(`The fine amount is ${dishwheel.fineAmount}.`);
+    respond(response_url, `The fine amount is ${dishwheel.fineAmount}.`);
   } else if (user_id !== dishwheel.creatorId) {
-    res.send(
+    respond(
+      response_url,
       `${user_name} cannot change the dishwheel's fine amount, only the creator of the dishwheel can.`
     );
   } else {
@@ -38,9 +37,13 @@ export const fineAmount: RequestHandler = async (req, res) => {
           $set: alteredDishwheel,
         }
       );
-      res.send(`Updated fine amount to ${dishwheel.fineAmount}.`);
+      respond(
+        response_url,
+        `Updated fine amount to ${dishwheel.fineAmount}.`,
+        true
+      );
     } else {
-      res.send(`Could not set "${text}" as the fine amount.`);
+      respond(response_url, `Could not set "${text}" as the fine amount.`);
     }
   }
   close();

@@ -2,13 +2,13 @@ import { RequestHandler } from "express";
 import { connect } from "../../mongodb";
 import Dishwheel, { getNextDishwasher } from "../../types/dishwheel";
 import SlashMessage from "../../types/slash-message";
+import { respond } from "../respond";
+import { noDishwheelFoundResponse } from "./responses/no-dishwheel-found";
 
 export const done: RequestHandler = async (req, res) => {
-  const {
-    channel_id,
-    user_name: person,
-    channel_name,
-  } = req.body as SlashMessage;
+  const message = req.body as SlashMessage;
+  const { channel_id, user_name: person, response_url } = message;
+  res.send();
   const [mongo, close] = await connect();
   const collectionOfDishwheels = mongo.collection<Dishwheel>("dishwheels");
   const dishwheel = await collectionOfDishwheels.findOne(
@@ -16,11 +16,14 @@ export const done: RequestHandler = async (req, res) => {
     { timeout: true }
   );
   if (!dishwheel) {
-    res.send(`No dishwheel in channel ${channel_name}.`);
+    noDishwheelFoundResponse(message);
   } else if (!dishwheel.dishwashers.includes(person)) {
-    res.send(`${person} is not a member of this channel's dishwheel.`);
+    respond(
+      response_url,
+      "You are not a member of this dishwheel. You must first join the dishwheel before you can complete dishes."
+    );
   } else if (dishwheel.currentDishwasher !== person) {
-    res.send(`${person} is not on dishes.`);
+    respond(response_url, `You are not on dishes.`);
   } else {
     const alteredDishwheel: Dishwheel = {
       ...dishwheel,
@@ -48,12 +51,16 @@ export const done: RequestHandler = async (req, res) => {
       Math.floor(countOfFinePeriodsPassed) * dishwheel.fineAmount;
     const hasFine = isItPossibleForThereToBeAFine && accruedFine > 0;
     if (hasFine) {
-      res.send(
-        `${person} completed the dishes with a fine of $${accruedFine}, ${alteredDishwheel.currentDishwasher} is now up.`
+      respond(
+        response_url,
+        `${person} completed the dishes with a fine of $${accruedFine}, ${alteredDishwheel.currentDishwasher} is now up.`,
+        true
       );
     } else {
-      res.send(
-        `${person} completed the dishes, ${alteredDishwheel.currentDishwasher} is now up.`
+      respond(
+        response_url,
+        `${person} completed the dishes, ${alteredDishwheel.currentDishwasher} is now up.`,
+        true
       );
     }
   }
