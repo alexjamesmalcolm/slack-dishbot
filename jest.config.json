@@ -1,0 +1,16 @@
+{
+  "preset": "ts-jest",
+  "clearMocks": true,
+  "coverageDirectory": "coverage",
+  "collectCoverage": true,
+  "collectCoverageFrom": [
+    "./**/*.ts"
+  ],
+  "testEnvironment": "node",
+  "globals": {
+    "ts-jest": {
+      "diagnostics": false
+    }
+  },
+  "transform": {}
+}
