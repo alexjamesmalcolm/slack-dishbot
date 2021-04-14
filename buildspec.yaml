@@ -4,12 +4,9 @@ phases:
   install:
     commands:
       - npm i
-  test:
-    commands:
-      - npm test
   build:
     commands:
-      - npm run build
+      - npm test && npm run build
 artifacts:
   files:
     - dist/**/*
