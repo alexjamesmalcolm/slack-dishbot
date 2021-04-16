@@ -9,6 +9,7 @@ phases:
       - npm test && npm run build
 artifacts:
   files:
+    - dist/**/*
     - node_modules
     - package-lock.json
     - package.json
