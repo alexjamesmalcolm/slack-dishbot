@@ -12,5 +12,8 @@
       "diagnostics": false
     }
   },
+  "testPathIgnorePatterns": [
+    "dist"
+  ],
   "transform": {}
 }
