@@ -2,9 +2,7 @@
   "name": "slack-dishbot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
   "module": "esnext",
-  "type": "module",
   "engines": {
     "node": "14.0.0"
   },
