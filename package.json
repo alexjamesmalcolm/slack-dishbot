@@ -5,6 +5,9 @@
   "main": "index.ts",
   "module": "esnext",
   "type": "module",
+  "engines": {
+    "node": ">=0.12"
+  },
   "scripts": {
     "build": "tsc",
     "start": "ts-node index.ts",
