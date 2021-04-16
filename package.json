@@ -9,7 +9,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "ts-node index.ts",
+    "start": "node .",
     "test": "jest",
     "dev": "ts-node-dev index.ts",
     "dev:debug": "ts-node-dev --inspect --respawn index.ts"
