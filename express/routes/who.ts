@@ -5,6 +5,7 @@ import SlashMessage from "../../types/slash-message";
 import { duration } from "moment";
 import { noDishwheelFoundResponse } from "./responses/no-dishwheel-found";
 import { respond } from "../respond";
+import { getDurationOfNextFine } from "../utils/time";
 
 export const who: RequestHandler = async (req, res) => {
   const message = req.body as SlashMessage;
@@ -33,15 +34,16 @@ export const who: RequestHandler = async (req, res) => {
             (dishwheel.finePeriodicity * 1000)
         : millisecondsOnDishes / (dishwheel.secondsUntilFine * 1000);
     if (isItPossibleForThereToBeAFine && countOfFinePeriodsPassed >= 1) {
+      const durationOfNextFine = getDurationOfNextFine(dishwheel);
       respond(
         response_url,
         `${dishwheel.currentDishwasher}'s turn on dishes started ${duration(
           -1 * millisecondsOnDishes
         ).humanize(true)} and has so far accrued a fine of $${
           Math.floor(countOfFinePeriodsPassed) * dishwheel.fineAmount
-        } and will accrue $${dishwheel.fineAmount} more ${duration(
-          (countOfFinePeriodsPassed % 1) * dishwheel.fineAmount
-        ).humanize(true)}`,
+        } and will accrue $${
+          dishwheel.fineAmount
+        } more ${durationOfNextFine.humanize(true)}`,
         true
       );
     } else if (isItPossibleForThereToBeAFine) {
