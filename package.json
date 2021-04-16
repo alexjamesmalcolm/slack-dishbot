@@ -6,6 +6,7 @@
   "engines": {
     "node": "14.16.0"
   },
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "start": "ts-node index.ts",
