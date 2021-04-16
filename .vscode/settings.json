@@ -4,5 +4,8 @@
         "Dishwheels",
         "dishbot",
         "dishwheel's"
-    ]
+    ],
+    "search.exclude": {
+        "**/dist/**/*": true
+    }
 }
