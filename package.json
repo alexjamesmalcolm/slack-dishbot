@@ -6,7 +6,7 @@
   "module": "esnext",
   "type": "module",
   "engines": {
-    "node": "v14.16.0"
+    "node": "14.0.0"
   },
   "scripts": {
     "build": "tsc",
