@@ -11,6 +11,7 @@
     "build": "tsc",
     "start": "node .",
     "test": "jest",
+    "test-network": "concurrently -s first -k 'npm:start' 'node network-test.js'",
     "dev": "ts-node-dev index.ts",
     "dev:debug": "ts-node-dev --inspect --respawn index.ts"
   },
@@ -38,6 +39,7 @@
     "@types/node-fetch": "^2.5.8",
     "@types/uuid": "^8.3.0",
     "body-parser": "^1.19.0",
+    "concurrently": "^6.0.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "knex": "^0.95.1",
