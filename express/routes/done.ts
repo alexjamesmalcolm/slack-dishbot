@@ -3,6 +3,7 @@ import { connect } from "../../mongodb";
 import Dishwheel, { getNextDishwasher } from "../../types/dishwheel";
 import SlashMessage from "../../types/slash-message";
 import { respond } from "../respond";
+import { formatMoney } from "../utils/formatMoney";
 import { noDishwheelFoundResponse } from "./responses/no-dishwheel-found";
 
 export const done: RequestHandler = async (req, res) => {
@@ -53,7 +54,9 @@ export const done: RequestHandler = async (req, res) => {
     if (hasFine) {
       respond(
         response_url,
-        `${person} completed the dishes with a fine of $${accruedFine}, ${alteredDishwheel.currentDishwasher} is now up.`,
+        `${person} completed the dishes with a fine of ${formatMoney(
+          accruedFine
+        )}, ${alteredDishwheel.currentDishwasher} is now up.`,
         true
       );
     } else {

@@ -3,6 +3,7 @@ import { connect } from "../../mongodb";
 import Dishwheel from "../../types/dishwheel";
 import SlashMessage from "../../types/slash-message";
 import { respond } from "../respond";
+import { formatMoney } from "../utils/formatMoney";
 import { noDishwheelFoundResponse } from "./responses/no-dishwheel-found";
 
 export const fineAmount: RequestHandler = async (req, res) => {
@@ -18,7 +19,10 @@ export const fineAmount: RequestHandler = async (req, res) => {
   if (!dishwheel) {
     noDishwheelFoundResponse(message);
   } else if (text.trim() === "") {
-    respond(response_url, `The fine amount is ${dishwheel.fineAmount}.`);
+    respond(
+      response_url,
+      `The fine amount is ${formatMoney(dishwheel.fineAmount)}.`
+    );
   } else if (user_id !== dishwheel.creatorId) {
     respond(
       response_url,
@@ -39,7 +43,7 @@ export const fineAmount: RequestHandler = async (req, res) => {
       );
       respond(
         response_url,
-        `Updated fine amount to ${dishwheel.fineAmount}.`,
+        `Updated fine amount to ${formatMoney(fineAmount)}.`,
         true
       );
     } else {

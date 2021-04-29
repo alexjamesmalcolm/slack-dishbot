@@ -42,9 +42,9 @@ export const who: RequestHandler = async (req, res) => {
           -1 * millisecondsOnDishes
         ).humanize(true)} and has so far accrued a fine of ${formatMoney(
           Math.floor(countOfFinePeriodsPassed) * dishwheel.fineAmount
-        )} and will accrue $${
+        )} and will accrue ${formatMoney(
           dishwheel.fineAmount
-        } more ${durationOfNextFine.humanize(true)}`,
+        )} more ${durationOfNextFine.humanize(true)}`,
         true
       );
     } else if (isItPossibleForThereToBeAFine) {
