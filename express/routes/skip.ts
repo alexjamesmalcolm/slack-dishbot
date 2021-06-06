@@ -36,7 +36,8 @@ export const skip: RequestHandler = async (req, res) => {
     );
     respond(
       response_url,
-      `${dishwheel.currentDishwasher} was skipped, ${alteredDishwheel.currentDishwasher} is now up.`
+      `${dishwheel.currentDishwasher} was skipped, ${alteredDishwheel.currentDishwasher} is now up.`,
+      true
     );
   }
   close();
