@@ -7,6 +7,7 @@ import { noDishwheelFoundResponse } from "./responses/no-dishwheel-found";
 import { respond } from "../respond";
 import { getDurationOfNextFine } from "../utils/time";
 import { formatMoney } from "../utils/formatMoney";
+import { formatUsername } from "../utils/formatUsername";
 
 export const who: RequestHandler = async (req, res) => {
   const message = req.body as SlashMessage;
@@ -38,7 +39,9 @@ export const who: RequestHandler = async (req, res) => {
       const durationOfNextFine = getDurationOfNextFine(dishwheel);
       respond(
         response_url,
-        `${dishwheel.currentDishwasher}'s turn on dishes started ${duration(
+        `${formatUsername(
+          dishwheel.currentDishwasher
+        )}'s turn on dishes started ${duration(
           -1 * millisecondsOnDishes
         ).humanize(true)} and has so far accrued a fine of ${formatMoney(
           Math.floor(countOfFinePeriodsPassed) * dishwheel.fineAmount
@@ -50,7 +53,9 @@ export const who: RequestHandler = async (req, res) => {
     } else if (isItPossibleForThereToBeAFine) {
       respond(
         response_url,
-        `${dishwheel.currentDishwasher}'s turn on dishes started ${duration(
+        `${formatUsername(
+          dishwheel.currentDishwasher
+        )}'s turn on dishes started ${duration(
           -1 * millisecondsOnDishes
         ).humanize(true)} and ${duration(millisecondsTillFine).humanize(
           true
@@ -60,7 +65,9 @@ export const who: RequestHandler = async (req, res) => {
     } else {
       respond(
         response_url,
-        `${dishwheel.currentDishwasher}'s turn on dishes started ${duration(
+        `${formatUsername(
+          dishwheel.currentDishwasher
+        )}'s turn on dishes started ${duration(
           -1 * millisecondsOnDishes
         ).humanize(true)}`,
         true

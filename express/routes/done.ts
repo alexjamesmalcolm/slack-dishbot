@@ -4,6 +4,7 @@ import Dishwheel, { getNextDishwasher } from "../../types/dishwheel";
 import SlashMessage from "../../types/slash-message";
 import { respond } from "../respond";
 import { formatMoney } from "../utils/formatMoney";
+import { formatUsername } from "../utils/formatUsername";
 import { noDishwheelFoundResponse } from "./responses/no-dishwheel-found";
 
 export const done: RequestHandler = async (req, res) => {
@@ -54,15 +55,19 @@ export const done: RequestHandler = async (req, res) => {
     if (hasFine) {
       respond(
         response_url,
-        `${person} completed the dishes with a fine of ${formatMoney(
-          accruedFine
-        )}, ${alteredDishwheel.currentDishwasher} is now up.`,
+        `${formatUsername(
+          person
+        )} completed the dishes with a fine of ${formatMoney(accruedFine)}, ${
+          alteredDishwheel.currentDishwasher
+        } is now up.`,
         true
       );
     } else {
       respond(
         response_url,
-        `${person} completed the dishes, ${alteredDishwheel.currentDishwasher} is now up.`,
+        `${formatUsername(person)} completed the dishes, ${formatUsername(
+          alteredDishwheel.currentDishwasher
+        )} is now up.`,
         true
       );
     }

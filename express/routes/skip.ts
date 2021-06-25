@@ -3,6 +3,7 @@ import { connect } from "../../mongodb";
 import Dishwheel, { getNextDishwasher } from "../../types/dishwheel";
 import SlashMessage from "../../types/slash-message";
 import { respond } from "../respond";
+import { formatUsername } from "../utils/formatUsername";
 import { noDishwheelFoundResponse } from "./responses/no-dishwheel-found";
 
 export const skip: RequestHandler = async (req, res) => {
@@ -20,7 +21,9 @@ export const skip: RequestHandler = async (req, res) => {
   } else if (user_id !== dishwheel.creatorId) {
     respond(
       response_url,
-      `${user_name} cannot skip ${dishwheel.currentDishwasher}, only the creator of the dishwheel can.`
+      `${formatUsername(user_name)} cannot skip ${formatUsername(
+        dishwheel.currentDishwasher
+      )}, only the creator of the dishwheel can.`
     );
   } else {
     const alteredDishwheel: Dishwheel = {
@@ -36,7 +39,11 @@ export const skip: RequestHandler = async (req, res) => {
     );
     respond(
       response_url,
-      `${dishwheel.currentDishwasher} was skipped, ${alteredDishwheel.currentDishwasher} is now up.`,
+      `${formatUsername(
+        dishwheel.currentDishwasher
+      )} was skipped, ${formatUsername(
+        alteredDishwheel.currentDishwasher
+      )} is now up.`,
       true
     );
   }
