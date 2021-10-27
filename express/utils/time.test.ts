@@ -1,5 +1,5 @@
 import { getDurationOfNextFine } from "./time";
-import { Temporal } from "proposal-temporal";
+import { Temporal } from "@js-temporal/polyfill";
 
 describe("getDurationOfNextFine", () => {
   it("should get in 10 minutes", () => {
