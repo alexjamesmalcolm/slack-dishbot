@@ -2,12 +2,13 @@ import { RequestHandler } from "express";
 import { connect } from "../../mongodb";
 import Dishwheel from "../../types/dishwheel";
 import SlashMessage from "../../types/slash-message";
-import { duration } from "moment";
 import { noDishwheelFoundResponse } from "./responses/no-dishwheel-found";
 import { respond } from "../respond";
 import { getDurationOfNextFine } from "../utils/time";
 import { formatMoney } from "../utils/formatMoney";
 import { formatUsername } from "../utils/formatUsername";
+import { humanizeDuration } from "../utils/humanizeDuration";
+import { Temporal } from "@js-temporal/polyfill";
 
 export const who: RequestHandler = async (req, res) => {
   const message = req.body as SlashMessage;
@@ -41,13 +42,13 @@ export const who: RequestHandler = async (req, res) => {
         response_url,
         `${formatUsername(
           dishwheel.currentDishwasher
-        )}'s turn on dishes started ${duration(
-          -1 * millisecondsOnDishes
-        ).humanize(true)} and has so far accrued a fine of ${formatMoney(
+        )}'s turn on dishes started ${humanizeDuration(
+          Temporal.Duration.from({ milliseconds: -1 * millisecondsOnDishes })
+        )} and has so far accrued a fine of ${formatMoney(
           Math.floor(countOfFinePeriodsPassed) * dishwheel.fineAmount
         )} and will accrue ${formatMoney(
           dishwheel.fineAmount
-        )} more ${durationOfNextFine.humanize(true)}`,
+        )} more ${humanizeDuration(durationOfNextFine)}`,
         true
       );
     } else if (isItPossibleForThereToBeAFine) {
@@ -55,10 +56,10 @@ export const who: RequestHandler = async (req, res) => {
         response_url,
         `${formatUsername(
           dishwheel.currentDishwasher
-        )}'s turn on dishes started ${duration(
-          -1 * millisecondsOnDishes
-        ).humanize(true)} and ${duration(millisecondsTillFine).humanize(
-          true
+        )}'s turn on dishes started ${humanizeDuration(
+          Temporal.Duration.from({ milliseconds: -1 * millisecondsOnDishes })
+        )} and ${humanizeDuration(
+          Temporal.Duration.from({ milliseconds: millisecondsTillFine })
         )} will receive a fine of ${formatMoney(dishwheel.fineAmount)}`,
         true
       );
@@ -67,9 +68,9 @@ export const who: RequestHandler = async (req, res) => {
         response_url,
         `${formatUsername(
           dishwheel.currentDishwasher
-        )}'s turn on dishes started ${duration(
-          -1 * millisecondsOnDishes
-        ).humanize(true)}`,
+        )}'s turn on dishes started ${humanizeDuration(
+          Temporal.Duration.from({ milliseconds: -1 * millisecondsOnDishes })
+        )}`,
         true
       );
     }
