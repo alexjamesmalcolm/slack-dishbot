@@ -27,9 +27,9 @@
   "homepage": "https://github.com/alexjamesmalcolm/slack-dishbot#readme",
   "devDependencies": {
     "@types/jest": "^26.0.22",
-    "jest": "^26.6.3",
+    "jest": "^27.3.1",
     "localtunnel": "^2.0.1",
-    "ts-jest": "^26.5.4",
+    "ts-jest": "^27.0.7",
     "ts-node-dev": "^1.1.6",
     "tslint": "^5.12.1"
   },
