@@ -7,7 +7,12 @@ export const connect = async (): Promise<[Db, () => void]> => {
   }
   try {
     const client = await new MongoClient(uri, {}).connect();
-    return [client.db("dishbot"), client.close];
+    const close = () => {
+      try {
+        client.close();
+      } catch (error) {}
+    };
+    return [client.db("dishbot"), close];
   } catch (error) {
     throw new Error(
       `There was an issue attempting to connect to ${uri}\n${error}`
