@@ -7,15 +7,14 @@ import { repeatingFineDuration } from "./routes/repeating-fine-duration";
 import { fineAmount } from "./routes/fine-amount";
 import { initialFineDuration } from "./routes/initial-fine-duration";
 import { skip } from "./routes/skip";
+import { health } from "./routes/health";
 
 export const runApp = async () => {
   const app = express();
 
   app.use(urlencoded({ extended: false }));
   app.use(json());
-  app.get("*", (req, res) => {
-    res.send("Health Check: UP");
-  });
+  app.all("*", health);
   app.post("/done", done);
   app.post("/join", join);
   app.post("/who", who);
