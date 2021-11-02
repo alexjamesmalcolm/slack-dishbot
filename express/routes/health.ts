@@ -4,9 +4,7 @@ import { errorToJson } from "../utils/errorToJson";
 
 export const health: RequestHandler = (req, res) =>
   connect()
-    .then(async ([mongo, close]) => {
-      const stats = await mongo.stats();
-      console.log(stats);
+    .then(async ([, close]) => {
       res.send("Health Check: UP");
       close();
     })
