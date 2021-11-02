@@ -6,6 +6,7 @@ import Dishwheel, {
 } from "../../types/dishwheel";
 import SlashMessage from "../../types/slash-message";
 import { respond } from "../respond";
+import { formatUsername } from "../utils/formatUsername";
 
 export const join: RequestHandler = async (req, res) => {
   res.send();
@@ -37,10 +38,13 @@ export const join: RequestHandler = async (req, res) => {
       );
       respond(
         responseUrl,
-        `${person} joined the dishwheel and is after ${getDishwasherBefore(
-          alteredDishwheel,
+        `${formatUsername(
           person
-        )} and before ${getDishwasherAfter(alteredDishwheel, person)}`,
+        )} joined the dishwheel and is after ${formatUsername(
+          getDishwasherBefore(alteredDishwheel, person)
+        )} and before ${formatUsername(
+          getDishwasherAfter(alteredDishwheel, person)
+        )}`,
         true
       );
     }
@@ -55,7 +59,11 @@ export const join: RequestHandler = async (req, res) => {
       finePeriodicity: 0,
       secondsUntilFine: 0,
     });
-    respond(responseUrl, `${person} started a dishwheel!`, true);
+    respond(
+      responseUrl,
+      `${formatUsername(person)} started a dishwheel!`,
+      true
+    );
   }
   close();
 };

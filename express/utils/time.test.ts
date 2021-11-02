@@ -1,5 +1,6 @@
 import { getDurationOfNextFine } from "./time";
-import { Temporal } from "proposal-temporal";
+import { Temporal } from "@js-temporal/polyfill";
+import { humanizeDuration } from "./humanizeDuration";
 
 describe("getDurationOfNextFine", () => {
   it("should get in 10 minutes", () => {
@@ -18,7 +19,7 @@ describe("getDurationOfNextFine", () => {
       },
       now
     );
-    expect(durationOfNextFine.humanize(true)).toBe("in 10 minutes");
+    expect(humanizeDuration(durationOfNextFine)).toBe("in 10 minutes");
   });
   it("should get in 20 minutes", () => {
     const dishesStarted = new Temporal.Instant(BigInt(0));
@@ -36,7 +37,7 @@ describe("getDurationOfNextFine", () => {
       },
       now
     );
-    expect(durationOfNextFine.humanize(true)).toBe("in 20 minutes");
+    expect(humanizeDuration(durationOfNextFine)).toBe("in 20 minutes");
   });
   it("should get in 5 minutes", () => {
     const dishesStarted = new Temporal.Instant(BigInt(0));
@@ -54,6 +55,6 @@ describe("getDurationOfNextFine", () => {
       },
       now
     );
-    expect(durationOfNextFine.humanize(true)).toBe("in 5 minutes");
+    expect(humanizeDuration(durationOfNextFine)).toBe("in 5 minutes");
   });
 });

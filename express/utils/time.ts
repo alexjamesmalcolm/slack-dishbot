@@ -1,5 +1,4 @@
-import { Duration, duration } from "moment";
-import { Temporal } from "proposal-temporal";
+import { Temporal } from "@js-temporal/polyfill";
 import Dishwheel from "../../types/dishwheel";
 
 const getInstantOfNextFine = ({
@@ -27,8 +26,8 @@ const getInstantOfNextFine = ({
 
 export const getDurationOfNextFine = (
   dishwheel: Dishwheel,
-  current = Temporal.now.instant()
-): Duration => {
+  current = Temporal.Now.instant()
+): Temporal.Duration => {
   const instantDishesStarted = Temporal.Instant.from(
     dishwheel.dateCurrentDishwasherStarted
   );
@@ -44,6 +43,5 @@ export const getDurationOfNextFine = (
     initialDuration,
     secondaryDuration,
   });
-  const remainingDuration = current.until(instantOfNextFine);
-  return duration(remainingDuration.total({ unit: "milliseconds" }));
+  return current.until(instantOfNextFine);
 };

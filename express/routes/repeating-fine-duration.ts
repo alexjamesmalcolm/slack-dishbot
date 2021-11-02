@@ -3,6 +3,7 @@ import { connect } from "../../mongodb";
 import Dishwheel from "../../types/dishwheel";
 import SlashMessage from "../../types/slash-message";
 import { respond } from "../respond";
+import { formatUsername } from "../utils/formatUsername";
 import { noDishwheelFoundResponse } from "./responses/no-dishwheel-found";
 
 export const repeatingFineDuration: RequestHandler = async (req, res) => {
@@ -25,7 +26,9 @@ export const repeatingFineDuration: RequestHandler = async (req, res) => {
   } else if (user_id !== dishwheel.creatorId) {
     respond(
       response_url,
-      `${user_name} cannot change the dishwheel's repeating fine duration, only the creator of the dishwheel can.`
+      `${formatUsername(
+        user_name
+      )} cannot change the dishwheel's repeating fine duration, only the creator of the dishwheel can.`
     );
   } else {
     const finePeriodicity = Number.parseFloat(text.trim());

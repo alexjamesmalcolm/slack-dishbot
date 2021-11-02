@@ -4,6 +4,7 @@ import Dishwheel from "../../types/dishwheel";
 import SlashMessage from "../../types/slash-message";
 import { respond } from "../respond";
 import { formatMoney } from "../utils/formatMoney";
+import { formatUsername } from "../utils/formatUsername";
 import { noDishwheelFoundResponse } from "./responses/no-dishwheel-found";
 
 export const fineAmount: RequestHandler = async (req, res) => {
@@ -26,7 +27,9 @@ export const fineAmount: RequestHandler = async (req, res) => {
   } else if (user_id !== dishwheel.creatorId) {
     respond(
       response_url,
-      `${user_name} cannot change the dishwheel's fine amount, only the creator of the dishwheel can.`
+      `${formatUsername(
+        user_name
+      )} cannot change the dishwheel's fine amount, only the creator of the dishwheel can.`
     );
   } else {
     const fineAmount = Number.parseFloat(text.trim());

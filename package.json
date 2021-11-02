@@ -4,7 +4,7 @@
   "description": "",
   "module": "esnext",
   "engines": {
-    "node": "14.16.0"
+    "node": "^14.16.0"
   },
   "main": "dist/index.js",
   "scripts": {
@@ -26,14 +26,15 @@
   },
   "homepage": "https://github.com/alexjamesmalcolm/slack-dishbot#readme",
   "devDependencies": {
-    "@types/jest": "^26.0.22",
-    "jest": "^26.6.3",
+    "@types/jest": "^27.0.2",
+    "eslint": "^8.1.0",
+    "jest": "^27.3.1",
     "localtunnel": "^2.0.1",
-    "ts-jest": "^26.5.4",
-    "ts-node-dev": "^1.1.6",
-    "tslint": "^5.12.1"
+    "ts-jest": "^27.0.7",
+    "ts-node-dev": "^1.1.6"
   },
   "dependencies": {
+    "@js-temporal/polyfill": "^0.2.0",
     "@types/express": "^4.17.11",
     "@types/mongodb": "^3.6.9",
     "@types/node-fetch": "^2.5.8",
@@ -43,12 +44,10 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "knex": "^0.95.1",
-    "moment": "^2.29.1",
     "mongodb": "^3.6.4",
     "node-fetch": "^2.6.1",
     "pg": "^8.5.1",
-    "proposal-temporal": "^0.7.0",
-    "ts-node": "^9.1.1",
+    "ts-node": "^10.4.0",
     "typescript": "^4.2.3",
     "uuid": "^8.3.2"
   }

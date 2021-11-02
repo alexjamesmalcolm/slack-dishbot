@@ -3,17 +3,12 @@ import { connect } from "../../mongodb";
 import Dishwheel, { getNextDishwasher } from "../../types/dishwheel";
 import SlashMessage from "../../types/slash-message";
 import { respond } from "../respond";
+import { formatUsername } from "../utils/formatUsername";
 import { noDishwheelFoundResponse } from "./responses/no-dishwheel-found";
 
 export const skip: RequestHandler = async (req, res) => {
   const message = req.body as SlashMessage;
-  const {
-    channel_id,
-    channel_name,
-    user_id,
-    user_name,
-    response_url,
-  } = message;
+  const { channel_id, text, user_id, user_name, response_url } = message;
   res.send();
   const [mongo, close] = await connect();
   const collectionOfDishwheels = mongo.collection<Dishwheel>("dishwheels");
@@ -23,10 +18,12 @@ export const skip: RequestHandler = async (req, res) => {
   );
   if (!dishwheel) {
     noDishwheelFoundResponse(message);
-  } else if (dishwheel.creatorId !== user_id) {
+  } else if (user_id !== dishwheel.creatorId) {
     respond(
       response_url,
-      `${user_name} cannot skip the current dishwasher, only the creator of the dishwheel can.`
+      `${formatUsername(user_name)} cannot skip ${formatUsername(
+        dishwheel.currentDishwasher
+      )}, only the creator of the dishwheel can.`
     );
   } else {
     const alteredDishwheel: Dishwheel = {
@@ -40,7 +37,15 @@ export const skip: RequestHandler = async (req, res) => {
         $set: alteredDishwheel,
       }
     );
-    respond(response_url, `${dishwheel.currentDishwasher} has been skipped.`);
+    respond(
+      response_url,
+      `${formatUsername(
+        dishwheel.currentDishwasher
+      )} was skipped, ${formatUsername(
+        alteredDishwheel.currentDishwasher
+      )} is now up.`,
+      true
+    );
   }
   close();
 };
