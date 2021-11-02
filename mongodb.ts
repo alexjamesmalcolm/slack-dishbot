@@ -6,10 +6,7 @@ export const connect = async (): Promise<[Db, () => void]> => {
     throw new Error("DATABASE_URL is not defined");
   }
   try {
-    const client = await new MongoClient(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }).connect();
+    const client = await new MongoClient(uri, {}).connect();
     return [client.db("dishbot"), client.close];
   } catch (error) {
     throw new Error(
