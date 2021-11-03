@@ -1,55 +1,63 @@
 import { Temporal } from "@js-temporal/polyfill";
+import { humanizeList } from "./humanizeList";
 
-export const humanizeDuration = (duration: Temporal.Duration): string => {
-  let result = "";
-  const units: {
-    singular: Temporal.DurationTotalOptions["unit"];
-    plural: Temporal.DurationTotalOptions["unit"];
-  }[] = [
+interface Unit {
+  singular: Temporal.DurationTotalOptions["unit"];
+  plural: Temporal.DurationTotalOptions["unit"];
+}
+
+export const humanizeDuration = (
+  duration: Temporal.Duration,
+  relative: boolean = false,
+  numberOfComponents: number = 2
+): string => {
+  const units: Unit[] = [
     { plural: "days", singular: "day" },
     { plural: "hours", singular: "hour" },
     { plural: "minutes", singular: "minute" },
     { plural: "seconds", singular: "second" },
   ];
 
-  const bigUnit = units.find(
-    (unit) => duration.total({ unit: unit.plural }) >= 1
+  const significantUnits: { amount: number; unit: Unit }[] = units.reduce(
+    (accumulator: { amount: number; unit: Unit }[], unit) => {
+      const durationWithoutPreviousTotals = accumulator.reduce(
+        (duration, { amount, unit }) =>
+          duration.subtract(Temporal.Duration.from({ [unit.plural]: amount })),
+        duration
+      );
+      const unitTotal = Math.floor(
+        durationWithoutPreviousTotals.total({ unit: unit.singular })
+      );
+      if (unitTotal >= 1) {
+        return [
+          ...accumulator,
+          {
+            amount: unitTotal,
+            unit,
+          },
+        ];
+      }
+      return accumulator;
+    },
+    []
   );
 
-  if (bigUnit) {
-    const bigUnitTotal = Math.floor(duration.total({ unit: bigUnit.singular }));
-    result += `${bigUnitTotal} ${
-      bigUnitTotal > 1 ? bigUnit.plural : bigUnit.singular
-    }`;
-
-    const durationWithoutBigUnitTotal = duration.subtract(
-      Temporal.Duration.from({
-        [bigUnit.plural]: bigUnitTotal,
+  const result = humanizeList(
+    significantUnits
+      .filter((_value, index) => index < numberOfComponents)
+      .map(({ amount, unit }) => {
+        const isPlural = amount > 1;
+        if (isPlural) return `${amount} ${unit.plural}`;
+        return `${amount} ${unit.singular}`;
       })
-    );
-    const smallUnit = units.find(
-      (unit) => durationWithoutBigUnitTotal.total({ unit: unit.plural }) >= 1
-    );
+  );
 
-    if (smallUnit) {
-      const smallUnitTotal = Math.floor(
-        durationWithoutBigUnitTotal.total({
-          unit: smallUnit.singular,
-        })
-      );
-      result += ` and ${smallUnitTotal} ${
-        smallUnitTotal > 1 ? smallUnit.plural : smallUnit.singular
-      }`;
-    }
-  }
-
-  if (result) {
+  if (result && relative) {
     if (duration.sign > 0) {
-      result = `in ${result}`;
+      return `in ${result}`;
     } else {
-      result = `${result} ago`;
+      return `${result} ago`;
     }
   }
-
   return result;
 };

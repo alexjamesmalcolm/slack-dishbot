@@ -43,12 +43,13 @@ export const who: RequestHandler = async (req, res) => {
         `${formatUsername(
           dishwheel.currentDishwasher
         )}'s turn on dishes started ${humanizeDuration(
-          Temporal.Duration.from({ milliseconds: -1 * millisecondsOnDishes })
+          Temporal.Duration.from({ milliseconds: -1 * millisecondsOnDishes }),
+          true
         )} and has so far accrued a fine of ${formatMoney(
           Math.floor(countOfFinePeriodsPassed) * dishwheel.fineAmount
         )} and will accrue ${formatMoney(
           dishwheel.fineAmount
-        )} more ${humanizeDuration(durationOfNextFine)}`,
+        )} more ${humanizeDuration(durationOfNextFine, true)}`,
         true
       );
     } else if (isItPossibleForThereToBeAFine) {
@@ -57,9 +58,11 @@ export const who: RequestHandler = async (req, res) => {
         `${formatUsername(
           dishwheel.currentDishwasher
         )}'s turn on dishes started ${humanizeDuration(
-          Temporal.Duration.from({ milliseconds: -1 * millisecondsOnDishes })
+          Temporal.Duration.from({ milliseconds: -1 * millisecondsOnDishes }),
+          true
         )} and ${humanizeDuration(
-          Temporal.Duration.from({ milliseconds: millisecondsTillFine })
+          Temporal.Duration.from({ milliseconds: millisecondsTillFine }),
+          true
         )} will receive a fine of ${formatMoney(dishwheel.fineAmount)}`,
         true
       );
@@ -69,7 +72,8 @@ export const who: RequestHandler = async (req, res) => {
         `${formatUsername(
           dishwheel.currentDishwasher
         )}'s turn on dishes started ${humanizeDuration(
-          Temporal.Duration.from({ milliseconds: -1 * millisecondsOnDishes })
+          Temporal.Duration.from({ milliseconds: -1 * millisecondsOnDishes }),
+          true
         )}`,
         true
       );
