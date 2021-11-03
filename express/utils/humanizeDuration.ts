@@ -1,6 +1,9 @@
 import { Temporal } from "@js-temporal/polyfill";
 
-export const humanizeDuration = (duration: Temporal.Duration): string => {
+export const humanizeDuration = (
+  duration: Temporal.Duration,
+  relative: boolean = false
+): string => {
   let result = "";
   const units: {
     singular: Temporal.DurationTotalOptions["unit"];
@@ -44,6 +47,7 @@ export const humanizeDuration = (duration: Temporal.Duration): string => {
   }
 
   if (result) {
+    if (!relative) return result;
     if (duration.sign > 0) {
       result = `in ${result}`;
     } else {

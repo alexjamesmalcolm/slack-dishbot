@@ -19,7 +19,7 @@ describe("getDurationOfNextFine", () => {
       },
       now
     );
-    expect(humanizeDuration(durationOfNextFine)).toBe("in 10 minutes");
+    expect(humanizeDuration(durationOfNextFine, true)).toBe("in 10 minutes");
   });
   it("should get in 20 minutes", () => {
     const dishesStarted = new Temporal.Instant(BigInt(0));
@@ -37,7 +37,7 @@ describe("getDurationOfNextFine", () => {
       },
       now
     );
-    expect(humanizeDuration(durationOfNextFine)).toBe("in 20 minutes");
+    expect(humanizeDuration(durationOfNextFine, true)).toBe("in 20 minutes");
   });
   it("should get in 5 minutes", () => {
     const dishesStarted = new Temporal.Instant(BigInt(0));
@@ -55,6 +55,6 @@ describe("getDurationOfNextFine", () => {
       },
       now
     );
-    expect(humanizeDuration(durationOfNextFine)).toBe("in 5 minutes");
+    expect(humanizeDuration(durationOfNextFine, true)).toBe("in 5 minutes");
   });
 });
