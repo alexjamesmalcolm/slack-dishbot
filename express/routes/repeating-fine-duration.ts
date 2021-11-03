@@ -24,7 +24,9 @@ export const repeatingFineDuration: RequestHandler = async (req, res) => {
     respond(
       response_url,
       `The repeating fine duration is ${humanizeDuration(
-        Temporal.Duration.from({ seconds: dishwheel.finePeriodicity })
+        Temporal.Duration.from({ seconds: dishwheel.finePeriodicity }),
+        false,
+        4
       )}.`
     );
   } else if (user_id !== dishwheel.creatorId) {
@@ -50,7 +52,9 @@ export const repeatingFineDuration: RequestHandler = async (req, res) => {
       respond(
         response_url,
         `Updated repeating fine duration to ${humanizeDuration(
-          Temporal.Duration.from({ seconds: finePeriodicity })
+          Temporal.Duration.from({ seconds: finePeriodicity }),
+          false,
+          4
         )}.`,
         true
       );

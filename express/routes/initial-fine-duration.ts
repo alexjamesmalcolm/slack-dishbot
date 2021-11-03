@@ -24,7 +24,9 @@ export const initialFineDuration: RequestHandler = async (req, res) => {
     respond(
       response_url,
       `The initial fine duration is ${humanizeDuration(
-        Temporal.Duration.from({ seconds: dishwheel.secondsUntilFine })
+        Temporal.Duration.from({ seconds: dishwheel.secondsUntilFine }),
+        false,
+        4
       )}.`
     );
   } else if (user_id !== dishwheel.creatorId) {
@@ -50,7 +52,9 @@ export const initialFineDuration: RequestHandler = async (req, res) => {
       respond(
         response_url,
         `Updated initial fine duration to ${humanizeDuration(
-          Temporal.Duration.from({ seconds: secondsUntilFine })
+          Temporal.Duration.from({ seconds: secondsUntilFine }),
+          false,
+          4
         )}.`,
         true
       );
