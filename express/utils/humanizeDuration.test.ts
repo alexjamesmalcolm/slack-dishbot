@@ -37,4 +37,15 @@ describe("humanizeDuration", () => {
 
     expect(result).toBe("in 6 hours");
   });
+  it("should display 5 hours, 62 minutes, and 5 seconds ago as 6 hours ago", () => {
+    const duration = Temporal.Duration.from({
+      hours: -5,
+      minutes: -62,
+      seconds: -5,
+    });
+
+    const result = humanizeDuration(duration, true, 1);
+
+    expect(result).toBe("6 hours ago");
+  });
 });
