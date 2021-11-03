@@ -32,4 +32,12 @@ describe("humanizeList", () => {
 
     expect(result).toBe("c, b, and a");
   });
+
+  it("should produce an empty string when the list has no elements", () => {
+    const list: string[] = [];
+
+    const result = humanizeList(list);
+
+    expect(result).toBe("");
+  });
 });
