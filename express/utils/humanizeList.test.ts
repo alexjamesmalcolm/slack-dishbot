@@ -24,4 +24,12 @@ describe("humanizeList", () => {
 
     expect(result).toBe("a");
   });
+
+  it("should produce an oxford comma'd list of 3 but reversed", () => {
+    const list = ["c", "b", "a"];
+
+    const result = humanizeList(list);
+
+    expect(result).toBe("c, b, and a");
+  });
 });
