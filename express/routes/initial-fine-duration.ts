@@ -45,7 +45,7 @@ export const initialFineDuration: RequestHandler = async (req, res) => {
       );
       respond(
         response_url,
-        `Updated initial fine duration to ${dishwheel.secondsUntilFine} seconds.`,
+        `Updated initial fine duration to ${secondsUntilFine} seconds.`,
         true
       );
     } else {
