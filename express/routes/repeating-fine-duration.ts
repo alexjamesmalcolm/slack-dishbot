@@ -45,7 +45,7 @@ export const repeatingFineDuration: RequestHandler = async (req, res) => {
       );
       respond(
         response_url,
-        `Updated repeating fine duration to ${dishwheel.finePeriodicity} seconds.`,
+        `Updated repeating fine duration to ${finePeriodicity} seconds.`,
         true
       );
     } else {
