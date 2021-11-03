@@ -14,7 +14,6 @@ export const runApp = async () => {
 
   app.use(urlencoded({ extended: false }));
   app.use(json());
-  app.all("*", health);
   app.post("/done", done);
   app.post("/join", join);
   app.post("/who", who);
@@ -22,6 +21,7 @@ export const runApp = async () => {
   app.post("/fine-amount", fineAmount);
   app.post("/initial-fine-duration", initialFineDuration);
   app.post("/skip", skip);
+  app.all("*", health);
 
   const port = process.env.PORT || 8000;
   app.listen(port, () => console.log(`Listening on port: ${port}`));
