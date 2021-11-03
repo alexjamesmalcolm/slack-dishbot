@@ -16,4 +16,12 @@ describe("humanizeList", () => {
 
     expect(result).toBe("a and b");
   });
+
+  it("should produce a list of 1 that's just the single item", () => {
+    const list = ["a"];
+
+    const result = humanizeList(list);
+
+    expect(result).toBe("a");
+  });
 });
