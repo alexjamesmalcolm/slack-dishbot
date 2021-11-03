@@ -8,4 +8,12 @@ describe("humanizeList", () => {
 
     expect(result).toBe("a, b, and c");
   });
+
+  it("should produce a list of 2 conjoined only by an 'and'", () => {
+    const list = ["a", "b"];
+
+    const result = humanizeList(list);
+
+    expect(result).toBe("a and b");
+  });
 });
