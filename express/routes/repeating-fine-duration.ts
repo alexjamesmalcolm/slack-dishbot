@@ -1,9 +1,11 @@
+import { Temporal } from "@js-temporal/polyfill";
 import { RequestHandler } from "express";
 import { connect } from "../../mongodb";
 import Dishwheel from "../../types/dishwheel";
 import SlashMessage from "../../types/slash-message";
 import { respond } from "../respond";
 import { formatUsername } from "../utils/formatUsername";
+import { humanizeDuration } from "../utils/humanizeDuration";
 import { noDishwheelFoundResponse } from "./responses/no-dishwheel-found";
 
 export const repeatingFineDuration: RequestHandler = async (req, res) => {
@@ -21,7 +23,9 @@ export const repeatingFineDuration: RequestHandler = async (req, res) => {
   } else if (text.trim() === "") {
     respond(
       response_url,
-      `The repeating fine duration is ${dishwheel.finePeriodicity} seconds.`
+      `The repeating fine duration is ${humanizeDuration(
+        Temporal.Duration.from({ seconds: dishwheel.finePeriodicity })
+      )}.`
     );
   } else if (user_id !== dishwheel.creatorId) {
     respond(
@@ -45,7 +49,9 @@ export const repeatingFineDuration: RequestHandler = async (req, res) => {
       );
       respond(
         response_url,
-        `Updated repeating fine duration to ${dishwheel.finePeriodicity} seconds.`,
+        `Updated repeating fine duration to ${humanizeDuration(
+          Temporal.Duration.from({ seconds: finePeriodicity })
+        )}.`,
         true
       );
     } else {

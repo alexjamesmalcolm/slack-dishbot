@@ -5,6 +5,8 @@ import SlashMessage from "../../types/slash-message";
 import { respond } from "../respond";
 import { formatUsername } from "../utils/formatUsername";
 import { noDishwheelFoundResponse } from "./responses/no-dishwheel-found";
+import { Temporal } from "@js-temporal/polyfill";
+import { humanizeDuration } from "../utils/humanizeDuration";
 
 export const initialFineDuration: RequestHandler = async (req, res) => {
   const message = req.body as SlashMessage;
@@ -21,7 +23,9 @@ export const initialFineDuration: RequestHandler = async (req, res) => {
   } else if (text.trim() === "") {
     respond(
       response_url,
-      `The initial fine duration in seconds is ${dishwheel.secondsUntilFine}.`
+      `The initial fine duration is ${humanizeDuration(
+        Temporal.Duration.from({ seconds: dishwheel.secondsUntilFine })
+      )}.`
     );
   } else if (user_id !== dishwheel.creatorId) {
     respond(
@@ -45,7 +49,9 @@ export const initialFineDuration: RequestHandler = async (req, res) => {
       );
       respond(
         response_url,
-        `Updated initial fine duration to ${dishwheel.secondsUntilFine} seconds.`,
+        `Updated initial fine duration to ${humanizeDuration(
+          Temporal.Duration.from({ seconds: secondsUntilFine })
+        )}.`,
         true
       );
     } else {
