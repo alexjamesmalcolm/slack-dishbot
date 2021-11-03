@@ -18,12 +18,14 @@ export const humanizeDuration = (
     { plural: "seconds", singular: "second" },
   ];
 
+  const absoluteDuration = duration.abs();
+
   const significantUnits: { amount: number; unit: Unit }[] = units.reduce(
     (accumulator: { amount: number; unit: Unit }[], unit) => {
       const durationWithoutPreviousTotals = accumulator.reduce(
         (duration, { amount, unit }) =>
           duration.subtract(Temporal.Duration.from({ [unit.plural]: amount })),
-        duration
+        absoluteDuration
       );
       const unitTotal = Math.floor(
         durationWithoutPreviousTotals.total({ unit: unit.singular })
@@ -42,22 +44,28 @@ export const humanizeDuration = (
     []
   );
 
-  const result = humanizeList(
-    significantUnits
-      .filter((_value, index) => index < numberOfComponents)
-      .map(({ amount, unit }) => {
-        const isPlural = amount > 1;
-        if (isPlural) return `${amount} ${unit.plural}`;
-        return `${amount} ${unit.singular}`;
-      })
+  const convertedToStringComponents = significantUnits.map(
+    ({ amount, unit }) => {
+      const isPlural = amount > 1;
+      if (isPlural) return `${amount} ${unit.plural}`;
+      return `${amount} ${unit.singular}`;
+    }
   );
 
-  if (result && relative) {
+  const onlyComponentsWithinLimit = convertedToStringComponents.filter(
+    (_value, index) => {
+      return index < numberOfComponents;
+    }
+  );
+
+  const humanizedResult = humanizeList(onlyComponentsWithinLimit);
+
+  if (humanizedResult && relative) {
     if (duration.sign > 0) {
-      return `in ${result}`;
+      return `in ${humanizedResult}`;
     } else {
-      return `${result} ago`;
+      return `${humanizedResult} ago`;
     }
   }
-  return result;
+  return humanizedResult;
 };
