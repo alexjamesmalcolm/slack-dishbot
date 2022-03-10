@@ -1,9 +1,19 @@
 import { Temporal } from "@js-temporal/polyfill";
 import { humanizeList } from "./humanizeList";
 
+type UnitPart =
+  | "days"
+  | "day"
+  | "hours"
+  | "hour"
+  | "minutes"
+  | "minute"
+  | "seconds"
+  | "second";
+
 interface Unit {
-  singular: Temporal.DurationTotalOptions["unit"];
-  plural: Temporal.DurationTotalOptions["unit"];
+  singular: UnitPart;
+  plural: UnitPart;
 }
 
 export const humanizeDuration = (
