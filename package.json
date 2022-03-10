@@ -34,7 +34,7 @@
     "ts-node-dev": "^1.1.6"
   },
   "dependencies": {
-    "@js-temporal/polyfill": "^0.2.0",
+    "@js-temporal/polyfill": "^0.4.0",
     "@types/express": "^4.17.11",
     "@types/node-fetch": "^2.5.8",
     "@types/uuid": "^8.3.0",
